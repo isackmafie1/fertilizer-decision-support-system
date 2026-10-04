@@ -1,0 +1,264 @@
+{% extends "base.html" %}
+
+{% block title %}Result - Fertilizer DSS{% endblock %}
+
+{% block content %}
+<div class="row justify-content-center">
+    <div class="col-md-8">
+
+        <!-- Success Banner -->
+        <div class="card border-0 shadow-sm mb-4">
+            <div class="card-body text-center py-4">
+                <div class="mb-3">
+                    <i class="bi bi-check-circle-fill text-success" style="font-size: 3.5rem;"></i>
+                </div>
+                <h3 class="fw-bold text-success">
+                    <span data-en="Recommendation Ready!" data-sw="Pendekezo Liko Tayari!">Recommendation Ready!</span>
+                </h3>
+                <p class="text-muted mb-0">
+                    <span data-en="Based on your soil data, here is your precision fertilizer plan" data-sw="Kulingana na data ya udongo wako, huu ndio mpango sahihi wa mbolea">Based on your soil data, here is your precision fertilizer plan</span>
+                </p>
+            </div>
+        </div>
+
+        <!-- PRIMARY: Precision Blend (gap-based, per-nutrient) -->
+        <div class="card border-0 shadow-sm mb-4">
+            <div class="card-header bg-success text-white">
+                <h5 class="mb-0">
+                    <i class="bi bi-sliders"></i>
+                    <span data-en="Precision Fertilizer Plan" data-sw="Mpango Sahihi wa Mbolea">Precision Fertilizer Plan</span>
+                </h5>
+            </div>
+            <div class="card-body">
+                <p class="text-muted small mb-3">
+                    <span data-en="Calculated by comparing your soil's N, P, K and pH directly against agronomic targets — each product below matches the exact gap for that nutrient."
+                          data-sw="Imehesabiwa kwa kulinganisha N, P, K na pH ya udongo wako moja kwa moja na malengo ya kitaalamu — kila bidhaa hapa chini inalingana hasa na upungufu wa kirutubisho husika.">
+                        Calculated by comparing your soil's N, P, K and pH directly against agronomic targets — each product below matches the exact gap for that nutrient.
+                    </span>
+                </p>
+
+                {% for item in custom_blend %}
+                <div class="border rounded p-3 mb-2">
+                    <div class="d-flex justify-content-between align-items-start flex-wrap gap-2">
+                        <div>
+                            <div class="fw-bold text-success fs-5">
+                                <i class="bi bi-bag-fill me-1"></i>{{ item.product }}
+                                {% if item.nutrient and item.nutrient != '-' %}
+                                <span class="badge bg-light text-success border border-success ms-1">{{ item.nutrient }}</span>
+                                {% endif %}
+                            </div>
+                            <div class="text-muted small mt-1">{{ item.reason }}</div>
+                        </div>
+                        <div class="text-end">
+                            {% if item.dose_kgha %}
+                            <div class="fw-bold fs-4 text-success">{{ item.dose_kgha }} <span class="fs-6 fw-normal text-muted">kg/ha</span></div>
+                            <div class="text-muted small">{{ item.total_kg }} kg <span data-en="total" data-sw="jumla">total</span></div>
+                            {% else %}
+                            <div class="fw-bold text-success">
+                                <span data-en="Not needed" data-sw="Haihitajiki">Not needed</span>
+                            </div>
+                            {% endif %}
+                        </div>
+                    </div>
+                    {% if item.when %}
+                    <div class="small text-muted mt-2 pt-2 border-top">
+                        <i class="bi bi-calendar-check me-1"></i>
+                        <span data-en="When:" data-sw="Lini:">When:</span> {{ item.when }}
+                    </div>
+                    {% endif %}
+                </div>
+                {% endfor %}
+            </div>
+        </div>
+
+        <!-- SECONDARY: AI Model Classification (reference only) -->
+        <div class="card border-0 shadow-sm mb-4">
+            <div class="card-header bg-light">
+                <h6 class="mb-0 text-muted fw-bold">
+                    <i class="bi bi-robot"></i>
+                    <span data-en="AI Model Classification (Reference)" data-sw="Uainishaji wa Model ya AI (Rejea Tu)">AI Model Classification (Reference)</span>
+                </h6>
+            </div>
+            <div class="card-body">
+                <p class="text-muted small mb-3">
+                    <span data-en="This is the machine learning model's single-product classification, shown for comparison. For a soil-specific plan, use the Precision Fertilizer Plan above."
+                          data-sw="Hii ni matokeo ya uainishaji wa model ya kujifunza kwa mashine (bidhaa moja), yanayoonyeshwa kwa kulinganisha tu. Kwa mpango unaolingana hasa na udongo wako, tumia Mpango Sahihi wa Mbolea ulioko juu.">
+                        This is the machine learning model's single-product classification, shown for comparison. For a soil-specific plan, use the Precision Fertilizer Plan above.
+                    </span>
+                </p>
+
+                <div class="d-flex justify-content-between align-items-center mb-2">
+                    <span class="fw-semibold">
+                        <i class="bi bi-bag-fill me-1"></i>{{ recommendation }}
+                        <span class="badge bg-light text-muted border ms-1">NPK: {{ info.npk }}</span>
+                    </span>
+                    <span class="badge bg-secondary fs-6">{{ confidence }}%</span>
+                </div>
+                <div class="progress mb-3" style="height: 8px;">
+                    <div class="progress-bar bg-secondary"
+                         style="width: {{ confidence }}%"></div>
+                </div>
+
+                {% if top_3|length > 1 %}
+                <p class="text-muted small mb-2">
+                    <span data-en="Other possibilities considered:" data-sw="Uwezekano mwingine uliozingatiwa:">Other possibilities considered:</span>
+                </p>
+                {% for item in top_3 %}
+                {% if item.name != recommendation %}
+                <div class="d-flex justify-content-between small text-muted mb-1">
+                    <span>{{ item.name }}</span>
+                    <span>{{ item.pct }}%</span>
+                </div>
+                {% endif %}
+                {% endfor %}
+                {% endif %}
+
+                {% if dose_kgha %}
+                <div class="small text-muted mt-3 pt-3 border-top">
+                    <span data-en="Model's suggested dose:" data-sw="Kiasi kilichopendekezwa na model:">Model's suggested dose:</span>
+                    {{ dose_kgha }} kg/ha ({{ total_dose_kg }} kg <span data-en="total for" data-sw="jumla kwa">total for</span> {{ farm_size }} <span data-en="hectares" data-sw="hekta">hectares</span>)
+                    &middot; {{ info.when }}
+                </div>
+                {% endif %}
+            </div>
+        </div>
+
+        <!-- Climate Data Card (NASA POWER) -->
+        <div class="card border-0 shadow-sm mb-4">
+            <div class="card-header bg-light">
+                <h6 class="mb-0 text-success fw-bold">
+                    <i class="bi bi-cloud-sun"></i>
+                    <span data-en="Climate Data Used" data-sw="Data ya Hali ya Hewa Iliyotumika">Climate Data Used</span>
+                    <span class="badge bg-success ms-2 fw-normal" style="font-size:11px;">
+                        {{ climate.source }}
+                    </span>
+                </h6>
+            </div>
+            <div class="card-body">
+                <div class="row text-center g-3">
+                    <div class="col-md-4">
+                        <div class="card border-0 bg-light p-3">
+                            <i class="bi bi-thermometer-half text-success fs-4"></i>
+                            <div class="fw-bold text-success fs-5 mt-1">{{ climate.temperature }}°C</div>
+                            <small class="text-muted">
+                                <span data-en="Temperature" data-sw="Joto">Temperature</span>
+                            </small>
+                        </div>
+                    </div>
+                    <div class="col-md-4">
+                        <div class="card border-0 bg-light p-3">
+                            <i class="bi bi-droplet-half text-success fs-4"></i>
+                            <div class="fw-bold text-success fs-5 mt-1">{{ climate.humidity }}%</div>
+                            <small class="text-muted">
+                                <span data-en="Humidity" data-sw="Unyevu">Humidity</span>
+                            </small>
+                        </div>
+                    </div>
+                    <div class="col-md-4">
+                        <div class="card border-0 bg-light p-3">
+                            <i class="bi bi-cloud-rain text-success fs-4"></i>
+                            <div class="fw-bold text-success fs-5 mt-1">{{ climate.rainfall }} mm</div>
+                            <small class="text-muted">
+                                <span data-en="Rainfall" data-sw="Mvua">Rainfall</span>
+                            </small>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Fertilizer Details -->
+        <div class="card border-0 shadow-sm mb-4">
+            <div class="card-header bg-light">
+                <h6 class="mb-0 text-success fw-bold">
+                    <i class="bi bi-info-circle"></i>
+                    <span data-en="Fertilizer Details" data-sw="Maelezo ya Mbolea">Fertilizer Details</span>
+                </h6>
+            </div>
+            <div class="card-body">
+                <div class="row g-3">
+                    <div class="col-md-12">
+                        <div class="card border-0 bg-light p-3">
+                            <h6 class="fw-bold text-success">
+                                <i class="bi bi-droplet"></i>
+                                <span data-en="Soil Values Entered" data-sw="Thamani za Udongo Ulizoingiza">Soil Values Entered</span>
+                            </h6>
+                            <p class="mb-0">
+                                N: {{ n_mgkg }} mg/kg &nbsp;|&nbsp;
+                                P: {{ p_mgkg }} mg/kg &nbsp;|&nbsp;
+                                K: {{ k_mgkg }} mg/kg
+                            </p>
+                        </div>
+                    </div>
+                    <div class="col-12">
+                        <div class="card border-0 bg-light p-3">
+                            <h6 class="fw-bold text-success">
+                                <i class="bi bi-journal-text"></i>
+                                <span data-en="Note" data-sw="Maelezo Zaidi">Note</span>
+                            </h6>
+                            <p class="mb-0">{{ info.note }}</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Action Buttons -->
+        <div class="row g-3 mb-4">
+            <div class="col-md-4">
+                <a href="/" class="btn btn-success btn-lg w-100">
+                    <i class="bi bi-arrow-repeat"></i>
+                    <span data-en="New Prediction" data-sw="Pendekezo Jipya">New Prediction</span>
+                </a>
+            </div>
+            <div class="col-md-4">
+                <a href="/history" class="btn btn-outline-success btn-lg w-100">
+                    <i class="bi bi-clock-history"></i>
+                    <span data-en="View History" data-sw="Ona Historia">View History</span>
+                </a>
+            </div>
+            <div class="col-md-4">
+                <button onclick="window.print()" class="btn btn-outline-secondary btn-lg w-100">
+                    <i class="bi bi-printer"></i>
+                    <span data-en="Print Result" data-sw="Chapisha">Print Result</span>
+                </button>
+            </div>
+        </div>
+
+        <!-- Tips Card -->
+        <div class="card border-0 shadow-sm">
+            <div class="card-header bg-light">
+                <h6 class="mb-0 text-success fw-bold">
+                    <i class="bi bi-lightbulb"></i>
+                    <span data-en="Application Tips" data-sw="Vidokezo vya Matumizi">Application Tips</span>
+                </h6>
+            </div>
+            <div class="card-body">
+                <ul class="list-unstyled mb-0">
+                    <li class="mb-2">
+                        <i class="bi bi-check2 text-success me-2"></i>
+                        <span data-en="Apply fertilizer at the start of the rainy season for best results" data-sw="Weka mbolea mwanzoni mwa msimu wa mvua kwa matokeo bora">Apply fertilizer at the start of the rainy season for best results</span>
+                    </li>
+                    <li class="mb-2">
+                        <i class="bi bi-check2 text-success me-2"></i>
+                        <span data-en="Ensure soil moisture is adequate before application" data-sw="Hakikisha unyevu wa udongo unatosha kabla ya kuweka mbolea">Ensure soil moisture is adequate before application</span>
+                    </li>
+                    <li class="mb-0">
+                        <i class="bi bi-check2 text-success me-2"></i>
+                        <span data-en="Store fertilizer in a dry place away from direct sunlight" data-sw="Hifadhi mbolea mahali pakavu mbali na jua moja kwa moja">Store fertilizer in a dry place away from direct sunlight</span>
+                    </li>
+                </ul>
+            </div>
+        </div>
+
+    </div>
+</div>
+
+<style>
+@media print {
+    nav, footer, .row.g-3 { display: none !important; }
+    .card { box-shadow: none !important; border: 1px solid #ccc !important; }
+}
+</style>
+
+{% endblock %}

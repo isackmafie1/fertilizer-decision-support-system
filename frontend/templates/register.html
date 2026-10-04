@@ -1,0 +1,120 @@
+{% extends "base.html" %}
+
+{% block title %}Register - Fertilizer DSS{% endblock %}
+
+{% block content %}
+<div class="row justify-content-center">
+    <div class="col-md-6">
+
+        <div class="card border-0 shadow-sm mt-4">
+            <div class="card-body p-4">
+                <div class="text-center mb-4">
+                    <i class="bi bi-person-plus text-success" style="font-size: 2.5rem;"></i>
+                    <h3 class="fw-bold text-success mt-2">
+                        <span data-en="Create Account" data-sw="Fungua Akaunti">Create Account</span>
+                    </h3>
+                    <p class="text-muted">
+                        <span data-en="Register to start using the Fertilizer DSS" data-sw="Jisajili kuanza kutumia Fertilizer DSS">Register to start using the Fertilizer DSS</span>
+                    </p>
+                </div>
+
+                {% if errors %}
+                <div class="alert alert-danger">
+                    <ul class="mb-0">
+                        {% for error in errors %}
+                        <li>{{ error }}</li>
+                        {% endfor %}
+                    </ul>
+                </div>
+                {% endif %}
+
+                <form method="POST" action="/register" autocomplete="off">
+
+                    <div class="mb-3">
+                        <label class="form-label fw-semibold">
+                            <span data-en="Full Name" data-sw="Jina Kamili">Full Name</span>
+                        </label>
+                        <input type="text" name="reg_fullname_field" class="form-control"
+                               autocomplete="off" required>
+                    </div>
+
+                    <div class="mb-3">
+                        <label class="form-label fw-semibold">
+                            <span data-en="Email Address" data-sw="Barua Pepe">Email Address</span>
+                        </label>
+                        <input type="text" name="reg_email_field" class="form-control"
+                               autocomplete="off" required>
+                    </div>
+
+                    <div class="mb-3">
+                        <label class="form-label fw-semibold">
+                            <span data-en="Password" data-sw="Nenosiri">Password</span>
+                        </label>
+                        <div class="input-group">
+                            <input type="password" name="password" id="password"
+                                   class="form-control" autocomplete="new-password"
+                                   required minlength="6">
+                            <button type="button" class="btn btn-outline-secondary"
+                                    onclick="togglePassword('password', 'eyeIcon1')">
+                                <i class="bi bi-eye" id="eyeIcon1"></i>
+                            </button>
+                        </div>
+                        <div class="form-text">
+                            <span data-en="At least 6 characters" data-sw="Angalau herufi 6">At least 6 characters</span>
+                        </div>
+                    </div>
+
+                    <div class="mb-4">
+                        <label class="form-label fw-semibold">
+                            <span data-en="Confirm Password" data-sw="Thibitisha Nenosiri">Confirm Password</span>
+                        </label>
+                        <div class="input-group">
+                            <input type="password" name="confirm_password" id="confirmPassword"
+                                   class="form-control" autocomplete="new-password"
+                                   required minlength="6">
+                            <button type="button" class="btn btn-outline-secondary"
+                                    onclick="togglePassword('confirmPassword', 'eyeIcon2')">
+                                <i class="bi bi-eye" id="eyeIcon2"></i>
+                            </button>
+                        </div>
+                    </div>
+
+                    <div class="d-grid">
+                        <button type="submit" class="btn btn-success btn-lg">
+                            <i class="bi bi-person-plus"></i>
+                            <span data-en="Create Account" data-sw="Fungua Akaunti">Create Account</span>
+                        </button>
+                    </div>
+
+                </form>
+
+                <p class="text-center mt-3 mb-0">
+                    <span data-en="Already have an account?" data-sw="Una akaunti tayari?">Already have an account?</span>
+                    <a href="/login" class="text-success fw-semibold">
+                        <span data-en="Log in" data-sw="Ingia">Log in</span>
+                    </a>
+                </p>
+            </div>
+        </div>
+
+    </div>
+</div>
+
+<script>
+function togglePassword(fieldId, iconId) {
+    const field = document.getElementById(fieldId);
+    const icon  = document.getElementById(iconId);
+
+    if (field.type === 'password') {
+        field.type = 'text';
+        icon.classList.remove('bi-eye');
+        icon.classList.add('bi-eye-slash');
+    } else {
+        field.type = 'password';
+        icon.classList.remove('bi-eye-slash');
+        icon.classList.add('bi-eye');
+    }
+}
+</script>
+
+{% endblock %}

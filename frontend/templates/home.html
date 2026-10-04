@@ -1,0 +1,173 @@
+{% extends "base.html" %}
+
+{% block title %}Home - Fertilizer DSS{% endblock %}
+
+{% block content %}
+<div class="row justify-content-center">
+    <div class="col-md-8">
+
+        <div class="card border-0 shadow-sm mb-4">
+            <div class="card-body text-center py-4">
+                <h2 class="fw-bold text-success">
+                    <i class="bi bi-cpu"></i>
+                    <span data-en="Fertilizer Decision Support System" data-sw="Mfumo wa Kusaidia Maamuzi ya Mbolea">Fertilizer Decision Support System</span>
+                </h2>
+                <p class="text-muted mb-0">
+                    <span data-en="Enter your soil test results to get a fertilizer recommendation" data-sw="Ingiza matokeo ya kipimo cha udongo kupata pendekezo la mbolea">Enter your soil test results to get a fertilizer recommendation</span>
+                </p>
+            </div>
+        </div>
+
+        <div class="card border-0 shadow-sm">
+            <div class="card-body p-4">
+                <form method="POST" action="/predict">
+
+                    <!-- Location -->
+                    <h5 class="text-success mb-3">
+                        <i class="bi bi-geo-alt"></i>
+                        <span data-en="Location" data-sw="Eneo">Location</span>
+                    </h5>
+                    <div class="row g-3 mb-2">
+                        <div class="col-md-6">
+                            <label class="form-label fw-semibold">
+                                <span data-en="District" data-sw="Wilaya">District</span>
+                            </label>
+                            <select name="district" id="districtSelect" class="form-select" required onchange="updateAutoDetected(this)">
+                                <option value="" disabled selected>-- Select District --</option>
+                                <option value="0">Busokelo</option>
+                                <option value="1">Chunya</option>
+                                <option value="2">Kyela</option>
+                                <option value="3">Mbarali</option>
+                                <option value="4" data-en="Mbeya Vijijini" data-sw="Mbeya Vijijini">Mbeya Vijijini</option>
+                                <option value="6" data-en="Mbeya Mjini" data-sw="Mbeya Mjini">Mbeya Mjini</option>
+                                <option value="5">Rungwe</option>
+                            </select>
+                        </div>
+
+                        <!-- Auto-detected info box -->
+                        <div class="col-md-6 d-flex align-items-end">
+                            <div id="autoDetectedBox" class="alert alert-success py-2 px-3 mb-0 w-100 d-none" style="font-size:13px;">
+                                <div class="fw-bold mb-1">
+                                    <i class="bi bi-magic me-1"></i>
+                                    <span data-en="Auto-detected:" data-sw="Imegunduliwa kiotomatiki:">Auto-detected:</span>
+                                </div>
+                                <div>
+                                    <i class="bi bi-layers me-1"></i>
+                                    <span data-en="Soil Type:" data-sw="Aina ya Udongo:">Soil Type:</span>
+                                    <strong id="soilTypeLabel">—</strong>
+                                </div>
+                                <div>
+                                    <i class="bi bi-cloud-check me-1"></i>
+                                    <span data-en="Climate: fetched from NASA POWER" data-sw="Hali ya Hewa: inachukuliwa kutoka NASA POWER">Climate: fetched from NASA POWER</span>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="mb-4"></div>
+
+                    <!-- Soil Nutrients -->
+                    <h5 class="text-success mb-3">
+                        <i class="bi bi-droplet"></i>
+                        <span data-en="Soil Nutrients (mg/kg)" data-sw="Virutubisho vya Udongo (mg/kg)">Soil Nutrients (mg/kg)</span>
+                    </h5>
+                    <div class="row g-3 mb-4">
+                        <div class="col-md-4">
+                            <label class="form-label fw-semibold">
+                                <span data-en="Nitrogen (N)" data-sw="Nitrojeni (N)">Nitrogen (N)</span>
+                                <span class="badge bg-success ms-1">mg/kg</span>
+                            </label>
+                            <input type="number" step="0.1" name="n_value"
+                                   class="form-control" required>
+                        </div>
+                        <div class="col-md-4">
+                            <label class="form-label fw-semibold">
+                                <span data-en="Phosphorus (P)" data-sw="Fosforasi (P)">Phosphorus (P)</span>
+                                <span class="badge bg-success ms-1">mg/kg</span>
+                            </label>
+                            <input type="number" step="0.1" name="p_value"
+                                   class="form-control" required>
+                        </div>
+                        <div class="col-md-4">
+                            <label class="form-label fw-semibold">
+                                <span data-en="Potassium (K)" data-sw="Potasiamu (K)">Potassium (K)</span>
+                                <span class="badge bg-success ms-1">mg/kg</span>
+                            </label>
+                            <input type="number" step="0.1" name="k_value"
+                                   class="form-control" required>
+                        </div>
+                    </div>
+
+                    <!-- Soil pH & Farm Size -->
+                    <h5 class="text-success mb-3">
+                        <i class="bi bi-thermometer"></i>
+                        <span data-en="Soil pH & Farm Size" data-sw="pH ya Udongo na Ukubwa wa Shamba">Soil pH & Farm Size</span>
+                    </h5>
+                    <div class="row g-3 mb-4">
+                        <div class="col-md-4">
+                            <label class="form-label fw-semibold">
+                                <span data-en="Soil pH" data-sw="pH ya Udongo">Soil pH</span>
+                            </label>
+                            <input type="number" name="ph_value" class="form-control"
+                                   step="0.1" required>
+                        </div>
+                        <div class="col-md-4">
+                            <label class="form-label fw-semibold">
+                                <span data-en="Farm Size (hectares)" data-sw="Ukubwa wa Shamba (Hekta)">Farm Size (hectares)</span>
+                            </label>
+                            <input type="number" step="0.1" name="farm_size"
+                                   class="form-control" value="1" min="0.1" required>
+                            <div class="form-text">
+                                <span data-en="1 acre ≈ 0.4 hectares" data-sw="Ekari 1 ≈ Hekta 0.4">1 acre ≈ 0.4 hectares</span>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Submit Button -->
+                    <div class="d-grid">
+                        <button type="submit" id="submitBtn" class="btn btn-success btn-lg">
+                            <i class="bi bi-cpu"></i>
+                            <span data-en="Get Recommendation" data-sw="Pata Pendekezo">Get Recommendation</span>
+                        </button>
+                    </div>
+
+                </form>
+            </div>
+        </div>
+
+    </div>
+</div>
+
+<script>
+// Soil type inayolingana na kila district (kutoka dataset ya 4,998 records)
+const districtSoilTypes = {
+    "0": "Sandy Clay Loam",  // Busokelo
+    "1": "Sandy Loam",       // Chunya
+    "2": "Sandy Clay Loam",  // Kyela
+    "3": "Sandy Clay Loam",  // Mbarali
+    "4": "Sandy Clay Loam",  // Mbeya Vijijini (Rural)
+    "5": "Sandy Clay Loam",  // Rungwe
+    "6": "Sandy Clay Loam",  // Mbeya Mjini (Urban)
+};
+
+function updateAutoDetected(select) {
+    const val = select.value;
+    const box = document.getElementById('autoDetectedBox');
+    const soilLabel = document.getElementById('soilTypeLabel');
+
+    if (val === "") {
+        box.classList.add('d-none');
+    } else {
+        soilLabel.textContent = districtSoilTypes[val] || "Sandy Clay Loam";
+        box.classList.remove('d-none');
+    }
+}
+
+document.querySelector('form').addEventListener('submit', function () {
+    const btn = document.getElementById('submitBtn');
+    btn.disabled = true;
+    btn.innerHTML = '<span class="spinner-border spinner-border-sm me-2" role="status"></span> Loading...';
+});
+</script>
+
+{% endblock %}

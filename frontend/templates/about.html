@@ -1,0 +1,190 @@
+{% extends "base.html" %}
+
+{% block title %}About - Fertilizer DSS{% endblock %}
+
+{% block content %}
+<div class="row justify-content-center">
+    <div class="col-md-8">
+
+        <!-- About Card -->
+        <div class="card border-0 shadow-sm mb-4">
+            <div class="card-header bg-success text-white">
+                <h5 class="mb-0">
+                    <i class="bi bi-info-circle"></i>
+                    <span data-en="About This System" data-sw="Kuhusu Mfumo Huu">About This System</span>
+                </h5>
+            </div>
+            <div class="card-body p-4">
+                <h4 class="text-success fw-bold">
+                    <span data-en="Fertilizer Decision Support System" data-sw="Mfumo wa Kusaidia Maamuzi ya Mbolea">Fertilizer Decision Support System</span>
+                </h4>
+                <p class="text-muted">
+                    <span data-en="A data-driven system for balanced fertilizer recommendations for maize production in Mbeya Region, Tanzania." data-sw="Mfumo unaotumia data kutoa mapendekezo sahihi ya mbolea kwa uzalishaji wa mahindi katika Mkoa wa Mbeya, Tanzania.">A data-driven system for balanced fertilizer recommendations for maize production in Mbeya Region, Tanzania.</span>
+                </p>
+
+                <hr>
+
+                <h6 class="fw-bold">
+                    <span data-en="Problem" data-sw="Tatizo">Problem</span>
+                </h6>
+                <p>
+                    <span data-en="Smallholder maize farmers in Mbeya apply fertilizers without proper soil testing, leading to over-application, under-application, and financial losses. Most farmers lack access to soil testing equipment and the technical knowledge to interpret laboratory results." data-sw="Wakulima wadogo wa mahindi Mbeya huweka mbolea bila kupima udongo ipasavyo, jambo linalosababisha matumizi kupita kiasi, matumizi pungufu, na hasara za kifedha. Wakulima wengi hawana uwezo wa kupata vifaa vya kupima udongo wala ujuzi wa kutafsiri matokeo ya maabara.">Smallholder maize farmers in Mbeya apply fertilizers without proper soil testing, leading to over-application, under-application, and financial losses. Most farmers lack access to soil testing equipment and the technical knowledge to interpret laboratory results.</span>
+                </p>
+
+                <h6 class="fw-bold">
+                    <span data-en="Solution" data-sw="Suluhisho">Solution</span>
+                </h6>
+                <p>
+                    <span data-en="This system uses Machine Learning to analyze soil data and recommend the correct fertilizer type and dosage for each farm's specific soil conditions, putting accurate agronomic intelligence directly into the hands of Agricultural Extension Officers." data-sw="Mfumo huu unatumia Machine Learning kuchambua data za udongo na kupendekeza aina sahihi ya mbolea pamoja na kiasi kinachohitajika kulingana na hali ya udongo wa kila shamba, ukiwapa Maafisa Ugani uwezo wa kufanya maamuzi sahihi ya kisayansi.">This system uses Machine Learning to analyze soil data and recommend the correct fertilizer type and dosage for each farm's specific soil conditions, putting accurate agronomic intelligence directly into the hands of Agricultural Extension Officers.</span>
+                </p>
+
+                <h6 class="fw-bold">
+                    <span data-en="Who Uses This System" data-sw="Nani Anatumia Mfumo Huu">Who Uses This System</span>
+                </h6>
+
+                <!-- Farmer & Extension Officer relationship -->
+                <div class="row g-3 mt-1">
+                    <div class="col-md-6">
+                        <div class="card border-0 bg-light h-100 p-3">
+                            <div class="text-center mb-2">
+                                <i class="bi bi-person-badge text-success" style="font-size: 2rem;"></i>
+                            </div>
+                            <h6 class="fw-bold text-success text-center">
+                                <span data-en="Agricultural Extension Officer" data-sw="Afisa Ugani">Agricultural Extension Officer</span>
+                            </h6>
+                            <p class="mb-0 small">
+                                <span data-en="The primary user of this system. The officer visits farms, collects soil samples, sends them to TARI Uyole for laboratory testing, enters the results into this system, and receives an instant fertilizer recommendation with the correct dosage." data-sw="Mtumiaji mkuu wa mfumo huu. Afisa ugani anatembelea mashamba, anachukua sampuli za udongo, anazipeleka TARI Uyole kwa upimaji wa kimaabara, anaingiza matokeo kwenye mfumo huu, na anapata pendekezo la mbolea papo hapo pamoja na kiasi sahihi.">The primary user of this system. The officer visits farms, collects soil samples, sends them to TARI Uyole for laboratory testing, enters the results into this system, and receives an instant fertilizer recommendation with the correct dosage.</span>
+                            </p>
+                        </div>
+                    </div>
+                    <div class="col-md-6">
+                        <div class="card border-0 bg-light h-100 p-3">
+                            <div class="text-center mb-2">
+                                <i class="bi bi-person-workspace text-success" style="font-size: 2rem;"></i>
+                            </div>
+                            <h6 class="fw-bold text-success text-center">
+                                <span data-en="Smallholder Farmer" data-sw="Mkulima Mdogo">Smallholder Farmer</span>
+                            </h6>
+                            <p class="mb-0 small">
+                                <span data-en="The final beneficiary of the system. The farmer does not interact with the system directly, but receives the fertilizer recommendation and application guidance through their extension officer, in simple language they understand." data-sw="Mnufaika wa mwisho wa mfumo. Mkulima haingiliani na mfumo moja kwa moja, lakini anapokea pendekezo la mbolea na maelekezo ya matumizi kupitia afisa ugani wake, kwa lugha rahisi anayoielewa.">The final beneficiary of the system. The farmer does not interact with the system directly, but receives the fertilizer recommendation and application guidance through their extension officer, in simple language they understand.</span>
+                            </p>
+                        </div>
+                    </div>
+                </div>
+
+                <h6 class="fw-bold mt-4">
+                    <span data-en="How It Works — Step by Step" data-sw="Jinsi Inavyofanya Kazi — Hatua kwa Hatua">How It Works — Step by Step</span>
+                </h6>
+                <div class="d-flex flex-column gap-2 mt-2">
+                    <div class="d-flex align-items-start">
+                        <span class="badge bg-success rounded-circle me-2" style="width:24px;height:24px;display:flex;align-items:center;justify-content:center;flex-shrink:0;">1</span>
+                        <span data-en="Extension officer visits the farm and collects a soil sample" data-sw="Afisa ugani anatembelea shamba na kuchukua sampuli ya udongo">Extension officer visits the farm and collects a soil sample</span>
+                    </div>
+                    <div class="d-flex align-items-start">
+                        <span class="badge bg-success rounded-circle me-2" style="width:24px;height:24px;display:flex;align-items:center;justify-content:center;flex-shrink:0;">2</span>
+                        <span data-en="Sample is sent to TARI Uyole Agricultural Centre for testing" data-sw="Sampuli inapelekwa TARI Uyole kwa upimaji">Sample is sent to TARI Uyole Agricultural Centre for testing</span>
+                    </div>
+                    <div class="d-flex align-items-start">
+                        <span class="badge bg-success rounded-circle me-2" style="width:24px;height:24px;display:flex;align-items:center;justify-content:center;flex-shrink:0;">3</span>
+                        <span data-en="Officer enters the lab results (N, P, K, pH) into this system" data-sw="Afisa anaingiza matokeo ya maabara (N, P, K, pH) kwenye mfumo">Officer enters the lab results (N, P, K, pH) into this system</span>
+                    </div>
+                    <div class="d-flex align-items-start">
+                        <span class="badge bg-success rounded-circle me-2" style="width:24px;height:24px;display:flex;align-items:center;justify-content:center;flex-shrink:0;">4</span>
+                        <span data-en="The system instantly returns the recommended fertilizer and dosage" data-sw="Mfumo unatoa mbolea inayopendekezwa na kiasi papo hapo">The system instantly returns the recommended fertilizer and dosage</span>
+                    </div>
+                    <div class="d-flex align-items-start">
+                        <span class="badge bg-success rounded-circle me-2" style="width:24px;height:24px;display:flex;align-items:center;justify-content:center;flex-shrink:0;">5</span>
+                        <span data-en="Officer explains the recommendation to the farmer in simple terms" data-sw="Afisa anamwelezea mkulima pendekezo kwa lugha rahisi">Officer explains the recommendation to the farmer in simple terms</span>
+                    </div>
+                </div>
+
+            </div>
+        </div>
+
+        <!-- Model Info -->
+        <div class="card border-0 shadow-sm mb-4">
+            <div class="card-header bg-success text-white">
+                <h5 class="mb-0">
+                    <i class="bi bi-cpu"></i>
+                    <span data-en="Model Information" data-sw="Taarifa za Mfano">Model Information</span>
+                </h5>
+            </div>
+            <div class="card-body p-4">
+                <div class="row g-3">
+                    <div class="col-md-6">
+                        <div class="card border-0 bg-light p-3">
+                            <h6 class="fw-bold text-success">
+                                <span data-en="Algorithm" data-sw="Algorithm">Algorithm</span>
+                            </h6>
+                            <p class="mb-0">Random Forest Classifier</p>
+                        </div>
+                    </div>
+                    <div class="col-md-6">
+                        <div class="card border-0 bg-light p-3">
+                            <h6 class="fw-bold text-success">
+                                <span data-en="Accuracy" data-sw="Usahihi">Accuracy</span>
+                            </h6>
+                            <p class="mb-0">95.62%</p>
+                        </div>
+                    </div>
+                    <div class="col-md-6">
+                        <div class="card border-0 bg-light p-3">
+                            <h6 class="fw-bold text-success">
+                                <span data-en="Dataset" data-sw="Dataset">Dataset</span>
+                            </h6>
+                            <p class="mb-0">
+                                <span data-en="4,998 soil records" data-sw="rekodi 4,998 za udongo">4,998 soil records</span>
+                                 — Mbeya Region
+                            </p>
+                        </div>
+                    </div>
+                    <div class="col-md-6">
+                        <div class="card border-0 bg-light p-3">
+                            <h6 class="fw-bold text-success">
+                                <span data-en="Districts Covered" data-sw="Wilaya Zilizofunikwa">Districts Covered</span>
+                            </h6>
+                            <p class="mb-0">Busokelo, Chunya, Kyela, Mbarali, Mbeya Rural, Rungwe</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Team Card -->
+        <div class="card border-0 shadow-sm">
+            <div class="card-header bg-success text-white">
+                <h5 class="mb-0">
+                    <i class="bi bi-people"></i>
+                    <span data-en="Project Team" data-sw="Timu ya Mradi">Project Team</span>
+                </h5>
+            </div>
+            <div class="card-body p-4">
+                <div class="row g-3 text-center">
+                    <div class="col-md-6">
+                        <div class="card border-0 bg-light p-3">
+                            <i class="bi bi-person-circle text-success" style="font-size: 2rem;"></i>
+                            <h6 class="fw-bold mt-2">Isack Hillary Mafie</h6>
+                            <p class="text-muted mb-0">
+                                <span data-en="Developer" data-sw="Mtengenezaji">Developer</span>
+                            </p>
+                        </div>
+                    </div>
+                    <div class="col-md-6">
+                        <div class="card border-0 bg-light p-3">
+                            <i class="bi bi-person-circle text-success" style="font-size: 2rem;"></i>
+                            <h6 class="fw-bold mt-2">Mr. Ayubu Mbaga</h6>
+                            <p class="text-muted mb-0">
+                                <span data-en="Supervisor" data-sw="Msimamizi">Supervisor</span>
+                            </p>
+                        </div>
+                    </div>
+                </div>
+                <p class="text-center text-muted mt-3 mb-0">
+                    MUST College of ICT | Mbeya, Tanzania | 2026
+                </p>
+            </div>
+        </div>
+
+    </div>
+</div>
+{% endblock %}

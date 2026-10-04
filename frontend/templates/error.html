@@ -1,0 +1,36 @@
+{% extends "base.html" %}
+
+{% block title %}Error - Fertilizer DSS{% endblock %}
+
+{% block content %}
+<div class="row justify-content-center">
+    <div class="col-md-7">
+
+        <div class="card border-0 shadow-sm">
+            <div class="card-body text-center py-5">
+                <i class="bi bi-exclamation-triangle-fill text-danger" style="font-size: 3rem;"></i>
+                <h3 class="fw-bold text-danger mt-3">
+                    <span data-en="Invalid Input" data-sw="Data Si Sahihi">Invalid Input</span>
+                </h3>
+                <p class="text-muted">
+                    <span data-en="Please correct the following before submitting:" data-sw="Tafadhali rekebisha yafuatayo kabla ya kutuma:">Please correct the following before submitting:</span>
+                </p>
+
+                <div class="alert alert-danger text-start mt-4">
+                    <ul class="mb-0">
+                        {% for error in errors %}
+                        <li>{{ error }}</li>
+                        {% endfor %}
+                    </ul>
+                </div>
+
+                <a href="/" class="btn btn-success btn-lg mt-3">
+                    <i class="bi bi-arrow-left"></i>
+                    <span data-en="Go Back" data-sw="Rudi Nyuma">Go Back</span>
+                </a>
+            </div>
+        </div>
+
+    </div>
+</div>
+{% endblock %}

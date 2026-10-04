@@ -1,0 +1,125 @@
+{% extends "base.html" %}
+
+{% block title %}History - Fertilizer DSS{% endblock %}
+
+{% block content %}
+<div class="row justify-content-center">
+    <div class="col-md-10">
+
+        <div class="card border-0 shadow-sm">
+            <div class="card-header bg-success text-white d-flex justify-content-between align-items-center">
+                <h5 class="mb-0">
+                    <i class="bi bi-clock-history"></i>
+                    <span data-en="Prediction History" data-sw="Historia ya Mapendekezo">Prediction History</span>
+                </h5>
+                {% if predictions %}
+                <a href="/export" class="btn btn-light btn-sm">
+                    <i class="bi bi-download"></i>
+                    <span data-en="Export CSV" data-sw="Pakua CSV">Export CSV</span>
+                </a>
+                {% endif %}
+            </div>
+            <div class="card-body">
+
+                {% if predictions %}
+                <!-- Search Box -->
+                <div class="mb-3">
+                    <input type="text" id="searchBox" class="form-control"
+                           data-ph-en="Search by district or fertilizer..."
+                           data-ph-sw="Tafuta kwa wilaya au mbolea..."
+                           placeholder="Search by district or fertilizer..."
+                           onkeyup="filterTable()">
+                </div>
+
+                <div class="table-responsive">
+                    <table class="table table-hover" id="historyTable">
+                        <thead class="table-success">
+                            <tr>
+                                <th>#</th>
+                                <th><span data-en="District" data-sw="Wilaya">District</span></th>
+                                <th>N (mg/kg)</th>
+                                <th>P (mg/kg)</th>
+                                <th>K (mg/kg)</th>
+                                <th>pH</th>
+                                <th><span data-en="Recommendation" data-sw="Pendekezo">Recommendation</span></th>
+                                <th><span data-en="Dose (kg/ha)" data-sw="Kipimo (kg/ha)">Dose (kg/ha)</span></th>
+                                <th><span data-en="Confidence" data-sw="Uhakika">Confidence</span></th>
+                                <th><span data-en="Date" data-sw="Tarehe">Date</span></th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            {% for p in predictions %}
+                            <tr>
+                                <td>{{ loop.index }}</td>
+                                <td>{{ p.district }}</td>
+                                <td>{{ p.n_value }}</td>
+                                <td>{{ p.p_value }}</td>
+                                <td>{{ p.k_value }}</td>
+                                <td>{{ p.ph_value }}</td>
+                                <td>
+                                    <span class="badge bg-success">
+                                        {{ p.recommendation }}
+                                    </span>
+                                </td>
+                                <td>
+                                    {% if p.dose_kgha %}
+                                        {{ p.dose_kgha }}
+                                    {% else %}
+                                        <span class="text-muted">—</span>
+                                    {% endif %}
+                                </td>
+                                <td>
+                                    {% if p.confidence %}
+                                        <span class="badge bg-light text-success border border-success">
+                                            {{ p.confidence }}%
+                                        </span>
+                                    {% else %}
+                                        <span class="text-muted">—</span>
+                                    {% endif %}
+                                </td>
+                                <td class="text-muted small">
+                                    {{ p.created_at[:16] if p.created_at else '-' }}
+                                </td>
+                            </tr>
+                            {% endfor %}
+                        </tbody>
+                    </table>
+                </div>
+
+                <!-- Total count -->
+                <div class="text-muted small mt-2">
+                    <span data-en="Total records:" data-sw="Jumla ya rekodi:">Total records:</span>
+                    <strong>{{ predictions|length }}</strong>
+                </div>
+
+                {% else %}
+                <div class="text-center py-5">
+                    <i class="bi bi-inbox text-muted" style="font-size: 3rem;"></i>
+                    <p class="text-muted mt-3">
+                        <span data-en="No predictions yet. Make your first prediction!" data-sw="Hakuna mapendekezo bado. Fanya pendekezo lako la kwanza!">No predictions yet. Make your first prediction!</span>
+                    </p>
+                    <a href="/" class="btn btn-success">
+                        <i class="bi bi-cpu"></i>
+                        <span data-en="Make Prediction" data-sw="Fanya Pendekezo">Make Prediction</span>
+                    </a>
+                </div>
+                {% endif %}
+
+            </div>
+        </div>
+
+    </div>
+</div>
+
+<script>
+function filterTable() {
+    const input = document.getElementById('searchBox').value.toLowerCase();
+    const rows  = document.querySelectorAll('#historyTable tbody tr');
+    rows.forEach(row => {
+        const text = row.textContent.toLowerCase();
+        row.style.display = text.includes(input) ? '' : 'none';
+    });
+}
+</script>
+
+{% endblock %}

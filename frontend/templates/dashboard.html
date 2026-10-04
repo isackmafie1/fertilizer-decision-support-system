@@ -1,0 +1,179 @@
+{% extends "base.html" %}
+
+{% block title %}Dashboard - Fertilizer DSS{% endblock %}
+
+{% block content %}
+<div class="row justify-content-center">
+    <div class="col-md-10">
+
+        <!-- Summary Card -->
+        <div class="card border-0 shadow-sm mb-4">
+            <div class="card-header bg-success text-white">
+                <h5 class="mb-0">
+                    <i class="bi bi-bar-chart"></i>
+                    <span data-en="Dashboard" data-sw="Dashibodi">Dashboard</span>
+                </h5>
+            </div>
+            <div class="card-body">
+                <div class="row text-center">
+                    <div class="col-md-4">
+                        <div class="card border-0 bg-light p-3">
+                            <h2 class="fw-bold text-success">{{ total }}</h2>
+                            <p class="text-muted mb-0">
+                                <span data-en="Total Predictions" data-sw="Jumla ya Mapendekezo">Total Predictions</span>
+                            </p>
+                        </div>
+                    </div>
+                    <div class="col-md-4">
+                        <div class="card border-0 bg-light p-3">
+                            <h2 class="fw-bold text-success">{{ counts|length }}</h2>
+                            <p class="text-muted mb-0">
+                                <span data-en="Fertilizer Types" data-sw="Aina za Mbolea">Fertilizer Types</span>
+                            </p>
+                        </div>
+                    </div>
+                    <div class="col-md-4">
+                        <div class="card border-0 bg-light p-3">
+                            <h2 class="fw-bold text-success">95.62%</h2>
+                            <p class="text-muted mb-0">
+                                <span data-en="Model Accuracy" data-sw="Usahihi wa Mfano">Model Accuracy</span>
+                            </p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        {% if counts %}
+        <!-- Charts Row -->
+        <div class="row g-4 mb-4">
+            <div class="col-md-6">
+                <div class="card border-0 shadow-sm h-100">
+                    <div class="card-header bg-light">
+                        <h6 class="mb-0 text-success fw-bold">
+                            <i class="bi bi-pie-chart"></i>
+                            <span data-en="Recommendations Distribution" data-sw="Mgawanyo wa Mapendekezo">Recommendations Distribution</span>
+                        </h6>
+                    </div>
+                    <div class="card-body">
+                        <canvas id="pieChart" height="220"></canvas>
+                    </div>
+                </div>
+            </div>
+            <div class="col-md-6">
+                <div class="card border-0 shadow-sm h-100">
+                    <div class="card-header bg-light">
+                        <h6 class="mb-0 text-success fw-bold">
+                            <i class="bi bi-geo-alt"></i>
+                            <span data-en="Predictions by District" data-sw="Mapendekezo kwa Wilaya">Predictions by District</span>
+                        </h6>
+                    </div>
+                    <div class="card-body">
+                        <canvas id="barChart" height="220"></canvas>
+                    </div>
+                </div>
+            </div>
+        </div>
+        {% endif %}
+
+        <!-- Recommendations Breakdown -->
+        <div class="card border-0 shadow-sm">
+            <div class="card-header bg-success text-white">
+                <h5 class="mb-0">
+                    <i class="bi bi-list-ul"></i>
+                    <span data-en="Recommendations Breakdown" data-sw="Mchanganuo wa Mapendekezo">Recommendations Breakdown</span>
+                </h5>
+            </div>
+            <div class="card-body">
+                {% if counts %}
+                {% for rec, count in counts.items() %}
+                <div class="mb-3">
+                    <div class="d-flex justify-content-between mb-1">
+                        <span class="fw-semibold">{{ rec }}</span>
+                        <span class="text-muted">{{ count }} <span data-en="times" data-sw="mara">times</span></span>
+                    </div>
+                    <div class="progress">
+                        <div class="progress-bar bg-success" 
+                             style="width: {{ (count / total * 100)|round }}%">
+                        </div>
+                    </div>
+                </div>
+                {% endfor %}
+                {% else %}
+                <div class="text-center py-5">
+                    <i class="bi bi-bar-chart text-muted" style="font-size: 3rem;"></i>
+                    <p class="text-muted mt-3">
+                        <span data-en="No data yet. Make predictions to see statistics!" data-sw="Hakuna data bado. Fanya mapendekezo kuona takwimu!">No data yet. Make predictions to see statistics!</span>
+                    </p>
+                    <a href="/" class="btn btn-success">
+                        <i class="bi bi-cpu"></i>
+                        <span data-en="Make Prediction" data-sw="Fanya Pendekezo">Make Prediction</span>
+                    </a>
+                </div>
+                {% endif %}
+            </div>
+        </div>
+
+    </div>
+</div>
+
+{% if counts %}
+<script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.0/dist/chart.umd.min.js"></script>
+<script>
+    // Data kutoka Flask (Jinja2) inabadilishwa kuwa JavaScript objects
+    const recLabels = {{ counts.keys()|list|tojson }};
+    const recValues = {{ counts.values()|list|tojson }};
+
+    const distLabels = {{ district_counts.keys()|list|tojson }};
+    const distValues = {{ district_counts.values()|list|tojson }};
+
+    // Rangi tofauti kwa kila fertilizer
+    const colors = ['#2E7D32', '#1565C0', '#E65100', '#C62828', '#6A1B9A', '#00838F', '#AD1457'];
+
+    // Pie Chart — Recommendations Distribution
+    new Chart(document.getElementById('pieChart'), {
+        type: 'doughnut',
+        data: {
+            labels: recLabels,
+            datasets: [{
+                data: recValues,
+                backgroundColor: colors,
+                borderWidth: 2,
+                borderColor: '#fff'
+            }]
+        },
+        options: {
+            responsive: true,
+            plugins: {
+                legend: {
+                    position: 'bottom',
+                    labels: { boxWidth: 12, font: { size: 11 } }
+                }
+            }
+        }
+    });
+
+    // Bar Chart — Predictions by District
+    new Chart(document.getElementById('barChart'), {
+        type: 'bar',
+        data: {
+            labels: distLabels,
+            datasets: [{
+                label: 'Predictions',
+                data: distValues,
+                backgroundColor: '#2E7D32',
+                borderRadius: 6
+            }]
+        },
+        options: {
+            responsive: true,
+            plugins: { legend: { display: false } },
+            scales: {
+                y: { beginAtZero: true, ticks: { stepSize: 1 } }
+            }
+        }
+    });
+</script>
+{% endif %}
+
+{% endblock %}
