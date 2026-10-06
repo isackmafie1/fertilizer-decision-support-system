@@ -22,3 +22,4 @@ Then open http://127.0.0.1:5000/login, register an account, and enter soil detai
 
 ---
 
+**Live demo:** https://fertilizer-decision-support-system-isack.onrender.com (the free server may take up to 60 seconds to wake up on the first visit)
